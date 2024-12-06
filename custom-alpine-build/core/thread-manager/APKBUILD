@@ -1,0 +1,26 @@
+# Maintainer: SwarmOS Team
+pkgname=swarm-thread-manager
+pkgver=1.0.0
+pkgrel=0
+pkgdesc="Intelligent thread management system for SwarmOS"
+url="https://swarmos.dev"
+arch="all"
+license="MIT"
+depends="musl json-c sqlite"
+makedepends="musl-dev gcc json-c-dev sqlite-dev"
+install="$pkgname.pre-install $pkgname.post-install"
+source="thread_manager.c"
+
+build() {
+    gcc -O2 -Wall -Wextra \
+        -o thread_manager \
+        "$srcdir"/thread_manager.c \
+        -pthread \
+        -ljson-c \
+        -lsqlite3
+}
+
+package() {
+    install -Dm755 thread_manager "$pkgdir"/usr/sbin/thread_manager
+    install -Dm755 "$srcdir"/thread-manager.initd "$pkgdir"/etc/init.d/thread-manager
+}

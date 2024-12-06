@@ -1,0 +1,19 @@
+#!/sbin/openrc-run
+
+name="thread-manager"
+description="SwarmOS Intelligent Thread Management System"
+command="/usr/sbin/thread_manager"
+command_args="${THREAD_MANAGER_OPTS}"
+pidfile="/run/thread-manager.pid"
+
+depend() {
+    need net
+    after boot
+    before logger
+}
+
+start_pre() {
+    # Ensure required directories exist
+    checkpath -d -m 0755 -o root:root /var/lib/thread-manager
+    checkpath -d -m 0755 -o root:root /var/log/thread-manager
+}
